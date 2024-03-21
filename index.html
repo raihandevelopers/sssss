@@ -1,14 +1,89 @@
-<html>
-  <head>
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style='margin : 0px; overflow: hidden;'>
-    <a-scene embedded arjs='trackingMethod: best;'>
-      <a-marker preset='hiro'>
-        <a-image src="test.png"></a-image>
-      </a-marker>
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360 Image Rotation</title>
+    <style>
+        .image-container {
+            width: 500px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            display: none; /* Initially hide the container */
+        }
+        img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Button to show image container -->
+    <button id="show-rotation">Show Image Rotation</button>
+
+    <div class="image-container">
+        <img src="sofa1.png" id="rotating-image">
+    </div>
+
+    <script>
+    const images = [
+        'sofa1.png',
+        'sofa2.png',
+        'sofa3.png',
+        'sofa4.png',
+        'sofa5.png',
+        'sofa6.png',
+        // Add paths to all your images
+    ];
+
+    const rotatingImage = document.getElementById('rotating-image');
+    let startX, startY, isDragging = false;
+
+    function updateImage(deltaX, deltaY) {
+        let imageIndex;
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+            if (deltaY < 0) {
+                imageIndex = 4;
+            } else {
+                imageIndex = 5;
+            }
+        } else {
+            const totalDragX = Math.abs(deltaX);
+            imageIndex = Math.min(Math.floor(totalDragX / 50), 3);
+        }
+        rotatingImage.src = images[imageIndex];
+    }
+
+    // Add event listeners for drag functionality
+    function addDragListeners() {
+        rotatingImage.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            startX = e.pageX;
+            startY = e.pageY;
+            isDragging = true;
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging) {
+                const deltaX = e.pageX - startX;
+                const deltaY = e.pageY - startY;
+                updateImage(deltaX, deltaY);
+            }
+        });
+    }
+
+    // Event listener for the button
+    document.getElementById('show-rotation').addEventListener('click', function() {
+        document.querySelector('.image-container').style.display = 'block';
+        addDragListeners();
+        this.remove(); // Optional: Remove the button after it's clicked
+    });
+    </script>
+</body>
 </html>
