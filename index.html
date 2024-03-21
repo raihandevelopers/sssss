@@ -57,26 +57,50 @@
     }
 
     // Add event listeners for drag functionality
-    function addDragListeners() {
-        rotatingImage.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            startX = e.pageX;
-            startY = e.pageY;
-            isDragging = true;
-        });
+// Add event listeners for drag functionality
+function addDragListeners() {
+    // Desktop Events
+    rotatingImage.addEventListener('mousedown', function(e) {
+        e.preventDefault(); // Prevents default image drag
+        startX = e.pageX;
+        startY = e.pageY;
+        isDragging = true;
+    });
 
-        document.addEventListener('mouseup', function() {
-            isDragging = false;
-        });
+    document.addEventListener('mouseup', function() {
+        isDragging = false;
+    });
 
-        document.addEventListener('mousemove', function(e) {
-            if (isDragging) {
-                const deltaX = e.pageX - startX;
-                const deltaY = e.pageY - startY;
-                updateImage(deltaX, deltaY);
-            }
-        });
-    }
+    document.addEventListener('mousemove', function(e) {
+        if (isDragging) {
+            const deltaX = e.pageX - startX;
+            const deltaY = e.pageY - startY;
+            updateImage(deltaX, deltaY);
+        }
+    });
+
+    // Mobile Events
+    rotatingImage.addEventListener('touchstart', function(e) {
+        e.preventDefault(); // Prevents default touch behavior
+        startX = e.touches[0].pageX;
+        startY = e.touches[0].pageY;
+        isDragging = true;
+    });
+
+    document.addEventListener('touchend', function() {
+        isDragging = false;
+    });
+
+    document.addEventListener('touchmove', function(e) {
+        if (isDragging) {
+            const deltaX = e.touches[0].pageX - startX;
+            const deltaY = e.touches[0].pageY - startY;
+            updateImage(deltaX, deltaY);
+        }
+    });
+}
+
+// ... rest of your script remains the same
 
     // Event listener for the button
     document.getElementById('show-rotation').addEventListener('click', function() {
